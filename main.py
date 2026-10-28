@@ -280,19 +280,7 @@ async def health(request: Request):
             "available": registry.available_provider_count(),
         }
 
-    # Detect if the service is still warming up (lifespan hasn't finished)
-    startup_complete = hasattr(app.state, "db_healthy")
-    if not startup_complete:
-        return JSONResponse(
-            status_code=503,
-            content={
-                "status":      "warming",
-                "retry_after": 15,
-                "version":     VERSION,
-            },
-        )
-
-    status_str = "healthy" if db_ok else "degraded"
+    status_str = "quantum_stable" if db_ok else "degraded"
     return {
         "status":     status_str,
         "version":    VERSION,
